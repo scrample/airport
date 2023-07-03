@@ -1,0 +1,32 @@
+{% extends 'air/base.html' %}
+
+{% block content %}
+{% if request.user.groups.all.0.name == 'manager' %}
+    <div class="container">
+        <canvas id="myChart" width="500" height="500"></canvas>
+    </div>
+
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: "pie",// bar, horizontalBar, pie, line, doughnut, radar, polarArea
+
+            data: {
+                labels: [{% for flight in flights %}'{{ flight.Race }}',{% endfor %}],
+                datasets: [{
+                    data: [{% for count in counts %}{{ count.total }},{% endfor %}],
+                    lineTension: 0.1,
+                    label: "Have a nice day ;)",
+                }]
+            },
+            
+            options: {
+                responsive: false
+            }
+
+
+        });
+
+    </script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'air/base.html' %}
+
+{% block content %}
+<div class="wrapper">
+    <div class="title-text">
+       <div class="title signup">
+          Login
+       </div>
+    </div>
+    <div class="form-container">
+       <div class="form-inner">
+          <form action="#" class="signup" method="post">
+            {% csrf_token %}
+            {% for f in form %}
+             <div class="field">
+                {{ f  }}
+             </div>
+             {% endfor %}
+             <div class="field btn">
+                <div class="btn-layer"></div>
+                <input type="submit" value="Signup">
+             </div>
+          </form>
+       </div>
+    </div>
+ </div>
+{% endblock %}

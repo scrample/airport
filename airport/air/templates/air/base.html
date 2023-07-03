@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'air/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'air/css/game.css' %}">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	  <script src="{% static 'air/js/airport.js' %}" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+    <div class="sidebar close">
+    
+        <ul class="nav-links">
+          <li>
+            <a href="#" >
+              <i class='bx bx-grid-alt' ></i>
+              <span class="link_name">Dashboard</span>
+            </a>
+            <ul class="sub-menu">
+              <li><a class="link_name" href="#">Dashboard</a></li>
+              
+            </ul>
+          </li>
+          <li>
+            <div class="iocn-link">
+              <a href="#">
+                <i class='bx bx-collection' ></i>
+                <span class="link_name">Tickets</span>
+              </a>
+              <i class='bx bxs-chevron-down arrow' ></i>
+            </div>
+            <ul class="sub-menu">
+              <li><a class="link_name" href="#">Tickets</a></li>
+              <li><a href="#" onclick="billets()">For sale</a></li>
+              <li><a href="#" onclick="Client()">My tickets</a></li>
+              {% if request.user.groups.all.0.name == 'manager' %}
+              <li><a href="#" onclick="Soldbillets()">Sold</a></li>
+              {% endif %}
+            </ul>
+          </li>
+          {% if request.user.groups.all.0.name == 'manager' %}
+          <li>
+            <div class="iocn-link">
+              <a href="#">
+                <i class='bx bx-book-alt' ></i>
+                <span class="link_name">Adding</span>
+              </a>
+              <i class='bx bxs-chevron-down arrow' ></i>
+            </div>
+            <ul class="sub-menu">
+              <li><a class="link_name" href="#">Adding</a></li>
+              <li><a href="{% url 'addticket' %}">Add ticket</a></li>
+              <li><a href="{% url 'addflight' %}">Add flight</a></li>
+              <li><a href="{% url 'addrace' %}">Add race</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="{% url 'chart' %}">
+              <i class='bx bx-pie-chart-alt-2' ></i>
+              <span class="link_name">Analytics</span>
+            </a>
+            <ul class="sub-menu blank">
+              <li><a class="link_name" href="{% url 'chart' %}" >Analytics</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="{% url 'statistic' %}" >
+              <i class='bx bx-line-chart' ></i>
+              <span class="link_name">Chart</span>
+            </a>
+            <ul class="sub-menu blank">
+              <li><a class="link_name" href="#">Chart</a></li>
+            </ul>
+          </li>
+          {% endif %}
+          <li>
+            <a href="{% url 'game' %}">
+              <i class='bx bx-compass' ></i>
+              <span class="link_name">Explore</span>
+            </a>
+            <ul class="sub-menu blank">
+              <li><a class="link_name" href="#">Explore</a></li>
+            </ul>
+          </li>
+          <li>
+        <div class="profile-details">
+          <div class="profile-content">
+            <!--<img src="image/profile.jpg" alt="profileImg">-->
+          </div>
+          <div class="name-job">
+            {% if request.user.is_authenticated %}
+            <div class="profile_name">Profile name: {{request.user}}</div>
+            {% endif %}
+          </div>
+          <a href="{% url 'logout' %}"><i class='bx bx-log-out' ></i></a>
+        </div>
+      </li>
+    </ul>
+      </div>
+    {% endif %}
+    {% block extraheader %}
+    {% endblock %}
+    <header>
+        <div class="home-content">
+            {% block sidebar %}
+            {% if request.user.is_authenticated %}
+              <i class='bx bx-menu' ></i>
+            {% endif %}
+            {% endblock %}
+        </div>
+        
+        <ul>
+            {% if request.user.is_authenticated %}
+            <li><a href="https://vk.com/id_no_found">Contact</a></li>
+            <li><a href="{% url 'userprofile' %}">Home</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'registr' %}">Registr</a></li>
+            {% endif %}
+        </ul>
+    </header>
+    
+    <section class="home-section" id="gradient">
+        {% block content %}
+        {% endblock %}
+    </section>
+    </div>
+    <!--Sidebar animation-->
+  <script>
+    let arrow = document.querySelectorAll(".arrow");
+    for (var i = 0; i < arrow.length; i++) {
+      arrow[i].addEventListener("click", (e)=>{
+     let arrowParent = e.target.parentElement.parentElement;//selecting main parent of arrow
+     arrowParent.classList.toggle("showMenu");
+      });
+    }
+    let sidebar = document.querySelector(".sidebar");
+    let sidebarBtn = document.querySelector(".bx-menu");
+    console.log(sidebarBtn);
+    sidebarBtn.addEventListener("click", ()=>{
+      sidebar.classList.toggle("close");
+    });
+    </script>
+    <!--END OF Sidebar animation-->
+    <!--Flying Squares-->
+    <script>
+      function createSquare(){
+          const section = document.querySelector("section");
+          const square = document.createElement("span");
+          square.classList.add('square');
+  
+          var size = Math.random() * 50;
+  
+          square.style.width = 10 + size + 'px';
+          square.style.height = 10 + size + 'px';
+  
+          square.style.top = Math.random() * innerHeight + 'px';
+          square.style.left = Math.random() * innerWidth + 'px';
+  
+          section.appendChild(square);
+  
+          setTimeout(() =>{
+              square.remove()
+          }, 5000)
+      }
+      setInterval(createSquare, 150)
+      </script>
+      <!--END of Flying squares-->
+      <!--LOGIN AND REGISTRATION FORM-->
+      <script>
+        const loginText = document.querySelector(".title-text .login");
+        const loginForm = document.querySelector("form.login");
+        const loginBtn = document.querySelector("label.login");
+        const signupBtn = document.querySelector("label.signup");
+        const signupLink = document.querySelector("form .signup-link a");
+        signupBtn.onclick = (()=>{
+          loginForm.style.marginLeft = "-50%";
+          loginText.style.marginLeft = "-50%";
+        });
+        loginBtn.onclick = (()=>{
+          loginForm.style.marginLeft = "0%";
+          loginText.style.marginLeft = "0%";
+        });
+        signupLink.onclick = (()=>{
+          signupBtn.click();
+          return false;
+        });
+     </script>
+     <!--END OF LOGIN AND REGISTRATION FORM-->
+     
+<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js'></script>
+<script src="{% static 'air/js/game.js' %}" ></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+{% extends 'air/base.html' %}
+
+{% block sidebar %}
+  {% if request.user.is_authenticated %}
+    <i class='bx bx-menu' ></i>
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+<!--etc content-->
+<div class="cards_wrapper" id="cards_wrapper" style="display: none;">
+
+  <div class="form-inner" style="width: 20%; margin-left: 40%;">
+    <form action="#" class="login">
+      <div class="field">
+        <input type="text" placeholder="Search..." id="findinput">
+    </div>
+  </form>
+  </div>
+  {% if t.buyer == None %}
+  {% for t in AvailableTickets %}
+  <div class="card">
+    <div class="card_heading">
+      <h2>Boarding Pass</h2>	
+      <h3>{{ t.flight.get_Price }}</h3>
+    </div>
+    <div class="card_thumbnail">
+      <img src="https://st3.depositphotos.com/16835446/34780/v/450/depositphotos_347808344-stock-illustration-paper-plane-vector-thin-line.jpg"  />
+    </div>
+    
+    <div class="card_trip">
+      <div class="trip_from">
+        <h2>From</h2>
+        <h3>{{ t.flight.get_From }}</h3>
+        
+      </div>
+      <div class="trip_icon">
+        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/553328/From.png" />
+      </div>
+      <div class="trip_to">
+        <h2>To</h2>
+        <h3>{{ t.flight.get_To }}</h3>
+      </div>
+    </div>
+        
+    <div class="card_divider">
+      <div class="divider_left divider_hole">
+      </div>
+      <div class="divider">
+      </div>
+      <div class="divider_right divider_hole">
+      </div>
+    </div>
+    <div class="card_seating">
+      <div class="seating_passenger">
+        {% if t.buyer == None %}
+        <h2><a href="{% url 'buy' t.pk%}">BUY ME !</a></h2>
+        <h3>available</h3>
+        {% else %}
+        <h2>Passenger</h2>
+        {{ t.buyer }}
+        {% endif %}
+      </div>
+      <div class="seating_seat">
+        <h2>Seat</h2>
+        <h3>{{ t.seat }}</h3>
+      </div>
+    </div>
+    <div class="card_details">
+      <div class="details_flight">
+        <h2>Flight</h2>
+        <h3>{{ t.flight }}</h3>
+      </div>
+      <div class="details_date">
+          <h2>Date</h2>
+          <h3>{{ t.flight.get_Date }}</h3>
+        </div>
+      <div class="details_date">
+        <h2>Time</h2>
+        <h3>{{ t.flight.get_Time }}</h3>
+
+      </div>
+      
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+
+
+{% if request.user.groups.all.0.name == 'manager' %}
+  <!-- SOLD BLOCK CARDSs-->
+  <div class="cards_wrapper" id="Sold" style="display: none;">
+  
+    {% for t in SoldTickets %}
+    <div class="card">
+      <div class="card_heading">
+        <h2>Boarding Pass</h2>	
+        <h3>{{ t.flight.get_Price }}</h3>
+      </div>
+      <div class="card_thumbnail">
+        <img src="https://st3.depositphotos.com/16835446/34780/v/450/depositphotos_347808344-stock-illustration-paper-plane-vector-thin-line.jpg"  />
+      </div>
+      
+      <div class="card_trip">
+        <div class="trip_from">
+          <h2>From</h2>
+          <h3>{{ t.flight.get_From }}</h3>
+          
+        </div>
+        <div class="trip_icon">
+          <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/553328/From.png" />
+        </div>
+        <div class="trip_to">
+          <h2>To</h2>
+          <h3>{{ t.flight.get_To }}</h3>
+        </div>
+      </div>
+          
+      <div class="card_divider">
+        <div class="divider_left divider_hole">
+        </div>
+        <div class="divider">
+        </div>
+        <div class="divider_right divider_hole">
+        </div>
+      </div>
+      <div class="card_seating">
+        <div class="seating_passenger">
+          {% if t.buyer == None %}
+          <h2><a href="#">BUY ME !</a></h2>
+          <h3>available</h3>
+          {% else %}
+          <h2>Passenger</h2>
+          {{ t.buyer }}
+          {% endif %}
+        </div>
+        <div class="seating_seat">
+          <h2>Seat</h2>
+          <h3>{{ t.seat }}</h3>
+        </div>
+      </div>
+      <div class="card_details">
+        <div class="details_flight">
+          <h2>Flight</h2>
+          <h3>{{ t.flight }}</h3>
+        </div>
+        <div class="details_date">
+            <h2>Date</h2>
+            <h3>{{ t.flight.get_Date }}</h3>
+          </div>
+        <div class="details_date">
+          <h2>Time</h2>
+          <h3>{{ t.flight.get_Time }}</h3>
+  
+        </div>
+        
+      </div>
+    </div>
+    {% endfor %}
+  
+  </div>
+{% endif %}
+
+
+<!--client-->
+<div class="cards_wrapper" id="client" style="display: none;">
+  
+  {% for t in ClientTickets %}
+  <div class="card">
+    <div class="card_heading">
+      <h2>Boarding Pass</h2>	
+      <h3>{{ t.flight.get_Price }}</h3>
+    </div>
+    <div class="card_thumbnail">
+      <img src="https://st3.depositphotos.com/16835446/34780/v/450/depositphotos_347808344-stock-illustration-paper-plane-vector-thin-line.jpg"  />
+    </div>
+    
+    <div class="card_trip">
+      <div class="trip_from">
+        <h2>From</h2>
+        <h3>{{ t.flight.get_From }}</h3>
+        
+      </div>
+      <div class="trip_icon">
+        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/553328/From.png" />
+      </div>
+      <div class="trip_to">
+        <h2>To</h2>
+        <h3>{{ t.flight.get_To }}</h3>
+      </div>
+    </div>
+        
+    <div class="card_divider">
+      <div class="divider_left divider_hole">
+      </div>
+      <div class="divider">
+      </div>
+      <div class="divider_right divider_hole">
+      </div>
+    </div>
+    <div class="card_seating">
+      <div class="seating_passenger">
+        {% if t.buyer == None %}
+        <h2><a href="#">BUY ME !</a></h2>
+        <h3>available</h3>
+        {% else %}
+        <h2>Passenger</h2>
+        {{ t.buyer }}
+        {% endif %}
+      </div>
+      <div class="seating_seat">
+        <h2>Seat</h2>
+        <h3>{{ t.seat }}</h3>
+      </div>
+    </div>
+    <div class="card_details">
+      <div class="details_flight">
+        <h2>Flight</h2>
+        <h3>{{ t.flight }}</h3>
+      </div>
+      <div class="details_date">
+          <h2>Date</h2>
+          <h3>{{ t.flight.get_Date }}</h3>
+        </div>
+      <div class="details_date">
+        <h2>Time</h2>
+        <h3>{{ t.flight.get_Time }}</h3>
+
+      </div>
+      
+    </div>
+  </div>
+
+  {% endfor %}
+
+</div>
+{% endblock %}
